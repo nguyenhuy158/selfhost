@@ -1,0 +1,26 @@
+{
+  "settings": {
+    "search": true,
+    "menuWidth": 25.416666,
+    "smallerScrollbars": true,
+    "showTimestamp": true,
+    "showStd": true,
+    "showAllContainers": true,
+    "softWrap": true,
+    "collapseNav": false,
+    "automaticRedirect": "instant",
+    "size": "large",
+    "compact": false,
+    "lightTheme": "auto",
+    "hourStyle": "24",
+    "dateLocale": "en-GB",
+    "locale": "en"
+  },
+  "pinned": [
+    "serverui",
+    "vaultwarden",
+    "webhook-tester"
+  ],
+  "releaseSeen": "v8.13.8",
+  "collapsedGroups": []
+}

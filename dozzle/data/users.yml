@@ -1,0 +1,13 @@
+users:
+  # "admin" here is username
+  admin:
+    email: me@email.net
+    name: Admin
+    # Generate with docker run -it --rm amir20/dozzle generate --name Huy --email me@email.net --password huy huy
+    password: $2a$11$9ho4vY2LdJ/WBopFcsAS0uORC0x2vuFHQgT/yBqZyzclhHsoaIkzK
+    filter:
+  huy:
+      email: me@email.net
+      name: Huy
+      password: $2a$11$vjSrGx/y5m/A1Pf6xcnNnuspjqYdPFAgl9HF9/PSXmQt2FQYqUR82
+      filter: ""
