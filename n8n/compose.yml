@@ -1,0 +1,91 @@
+
+services:
+
+    # browserless:
+    #     container_name: n8n_browserless
+    #     image: ghcr.io/browserless/chromium
+    #     environment:
+    #         - "CONCURRENT=10"
+    #         - "TOKEN=6R0W53R135510"
+    #     ports:
+    #         - '30001:3000'
+    #     restart: unless-stopped
+    #     networks:
+    #         - nginx_network
+
+    n8n:
+        # user: "root"
+        # image: docker.n8n.io/n8nio/n8n:1.80.5
+        image: docker.n8n.io/n8nio/n8n
+        pull_policy: always
+        container_name: n8n
+        depends_on:
+            - postgres
+        ports:
+            - '5678:5678'
+        environment:
+            - N8N_METRICS=true
+            - QUEUE_HEALTH_CHECK_ACTIVE=true
+            - N8N_ENCRYPTION_KEY=ntqhuy2k2
+            # - N8N_LOG_LEVEL=debug
+            # - N8N_LOG_OUTPUT=console,file
+            # - N8N_LOG_FILE_LOCATION=/home/node/.n8n/logs/n8n.log
+            # - N8N_LOG_FILE_MAXSIZE=50
+            # - N8N_LOG_FILE_MAXCOUNT=60
+            - N8N_SECURE_COOKIE=false
+            # - N8N_RUNNERS_ENABLED=true
+            - DB_TYPE=postgresdb
+            - DB_POSTGRESDB_DATABASE=n8n
+            - DB_POSTGRESDB_HOST=postgres
+            - DB_POSTGRESDB_PORT=5432
+            - DB_POSTGRESDB_USER=n8n_user
+            - DB_POSTGRESDB_SCHEMA=public
+            - DB_POSTGRESDB_PASSWORD=n8n_password
+            - GENERIC_TIMEZONE=Asia/Ho_Chi_Minh
+            - TZ=Asia/Ho_Chi_Minh
+            # - WEBHOOK_URL=https://bestcyberbot.click
+            # - WEBHOOK_URL=https://n8n.hyit08.xyz/
+            - WEBHOOK_URL=https://n8n.bestcyberbot.click/
+            - NODE_FUNCTION_ALLOW_EXTERNAL=moment,lodash,js-yaml
+            - NODE_FUNCTION_ALLOW_BUILTIN=*
+        volumes:
+            - ./n8n_data:/home/node/.n8n
+            - /mnt/DATA1T/stash/data:/mnt/DATA1T/stash/data
+        restart: unless-stopped
+        # networks:
+        #     - nginx_network
+        labels:
+        - "dockflare.enable=true"
+        - "dockflare.hostname=dozzle.huyab.click"
+        - "dockflare.service=http://dozzle:8080"
+        - "dockflare.access.group=admin-team"
+        networks:
+        - cloudflare-net
+
+    postgres:
+        container_name: n8n_postgres
+        image: postgres:14
+        environment:
+            - POSTGRES_DB=n8n
+            - POSTGRES_USER=n8n_user
+            - POSTGRES_PASSWORD=n8n_password
+        # ports:
+        #     - '5432:5432'
+        volumes:
+            - ./postgres_data:/var/lib/postgresql/data
+        restart: unless-stopped
+        #  networks:
+        #      - nginx_network
+
+# networks:
+#     nginx_network:
+#         external: true
+#         name: nginx_network
+# 
+# volumes:
+#     n8n_data:
+#     postgres_data:
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true
