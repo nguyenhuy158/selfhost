@@ -1,0 +1,107 @@
+services:
+  docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy:v0.4.1
+    logging:
+      driver: "none"
+    container_name: docker-socket-proxy
+    restart: unless-stopped
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - CONTAINERS=1
+      - EVENTS=1
+      - NETWORKS=1
+      - IMAGES=1
+      - POST=1
+      - PING=1
+      - INFO=1
+      - EXEC=1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - dockflare-internal
+
+  dockflare-init:
+    image: alpine:3.20
+    command: ["sh", "-c", "chown -R ${DOCKFLARE_UID:-65532}:${DOCKFLARE_GID:-65532} /app/data"]
+    volumes:
+      - dockflare_data:/app/data
+    networks:
+      - dockflare-internal
+    restart: "no"
+
+  dockflare:
+    image: alplat/dockflare:stable
+    container_name: dockflare
+    restart: unless-stopped
+    volumes:
+      - dockflare_data:/app/data
+    environment:
+      - CF_ACCOUNT_ID=8644a6e0bbe848731d8614f9feca2806
+      - REDIS_URL=redis://redis:6379/0
+      - REDIS_DB_INDEX=0
+      - DOCKER_HOST=tcp://docker-socket-proxy:2375
+      - LOG_LEVEL=ERROR
+    depends_on:
+      docker-socket-proxy:
+        condition: service_started
+      dockflare-init:
+        condition: service_completed_successfully
+      redis:
+        condition: service_started
+    networks:
+      - cloudflare-net
+      - dockflare-internal
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=dockflare.huyab.click"
+      - "dockflare.service=http://dockflare:5000"
+      - "dockflare.access.group=admin-team"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+    container_name: dockflare-redis
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    volumes:
+      - dockflare_redis:/data
+    networks:
+      - dockflare-internal
+
+  picoshare:
+    image: mtlynch/picoshare
+    environment:
+      - PS_SHARED_SECRET=huy
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=files.huyab.click"
+      - "dockflare.service=http://picoshare:4001"
+      - "dockflare.access.group=nas-family"
+    networks:
+      - cloudflare-net
+
+  internal-tool:
+    image: nginx:latest
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=nginx.huyab.click"
+      - "dockflare.service=http://internal-tool:80"
+      # - "dockflare.access.policy=authenticate"
+      # - "dockflare.access.email=admin@example.com,@example.com,ntqhuy2k2@gmail.com"
+    networks:
+      - cloudflare-net
+
+
+volumes:
+  dockflare_data:
+  dockflare_redis:
+
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+  dockflare-internal:
+    name: dockflare-internal
