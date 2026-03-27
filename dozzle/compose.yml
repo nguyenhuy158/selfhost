@@ -1,0 +1,54 @@
+services:
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    ports:
+      - "8989:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/data
+    environment:
+      - DOZZLE_AUTH_PROVIDER=simple
+      - DOZZLE_ENABLE_ACTIONS=true
+      - DOZZLE_ENABLE_SHELL=true
+      - DOZZLE_NO_ANALYTICS=true
+      - DOZZLE_HOSTNAME=dozzle.huyab.click
+      - DOZZLE_ENABLE_METRICS=true
+    restart: always
+    healthcheck:
+      test: ["CMD", "/dozzle", "healthcheck"]
+      interval: 3s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=dozzle.huyab.click"
+      - "dockflare.service=http://dozzle:8080"
+      - "dockflare.access.group=admin-team"
+    networks:
+      - cloudflare-net
+      
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true
+  # dozzle-agent:
+  #   container_name: agent
+  #   image: amir20/dozzle:latest
+  #   command: agent
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   ports:
+  #     - "7007:7007"
+  #     # - "7007:8080"
+  #   environment:
+  #     - DOZZLE_HOSTNAME=nixos
+  #   healthcheck:
+  #     test: ["CMD", "/dozzle", "healthcheck"]
+  #     interval: 5s
+  #     retries: 5
+  #     start_period: 5s
+  #     start_interval: 5s
+  #   restart: always
+
