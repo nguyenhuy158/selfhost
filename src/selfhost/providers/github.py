@@ -18,14 +18,18 @@ class GitHubProvider:
             tools = []
             
             for repo in repos:
-                # We consider a "tool" as a public repo that is not a fork (optional) 
-                # and has a description.
-                if not repo.get("fork") and repo.get("description"):
+                # Rule: Must be a Python project OR have 'python' topic, not a fork, and have a description
+                topics = repo.get("topics", [])
+                is_python = repo.get("language") == "Python" or "python" in topics
+                has_description = bool(repo.get("description"))
+                is_not_fork = not repo.get("fork")
+
+                if is_python and has_description and is_not_fork:
                     tools.append(Tool(
                         name=repo["name"],
                         description=repo["description"],
                         url=repo["html_url"],
-                        command=repo["name"] # Default command is the repo name
+                        command=repo["name"]
                     ))
             
             return ToolResult(tools=tools, success=True)
