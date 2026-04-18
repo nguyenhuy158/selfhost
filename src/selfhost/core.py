@@ -7,6 +7,8 @@ class Tool:
     description: str
     url: str
     command: str
+    version: str = "n/a"
+    install_cmd: str = ""
 
 @dataclass
 class ToolResult:

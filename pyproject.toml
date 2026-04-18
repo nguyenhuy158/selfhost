@@ -1,6 +1,6 @@
 [project]
 name = "selfhost"
-version = "0.1.0"
+dynamic = ["version"]
 description = "A CLI tool to list and manage your self-hosted tools from GitHub."
 authors = [{ name = "Nguyen Huy", email = "nguyenhuy158@gmail.com" }]
 dependencies = [
@@ -20,3 +20,6 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.dynamic]
+version = {file = ["VERSION"]}

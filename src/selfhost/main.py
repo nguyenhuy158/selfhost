@@ -55,11 +55,13 @@ def list_tools():
         return
 
     table = Table(title="[bold blue]Available Tools[/bold blue]")
-    table.add_column("Tool (Command)", style="cyan", no_wrap=True)
+    table.add_column("Tool", style="cyan", no_wrap=True)
+    table.add_column("Version", style="magenta")
     table.add_column("Description", style="green")
+    table.add_column("Install & Run (uvx)", style="yellow")
 
     for tool in result.tools:
-        table.add_row(tool.command, tool.description)
+        table.add_row(tool.name, tool.version, tool.description, tool.install_cmd)
 
     console.print(table)
     console.print(f"\nFound [bold cyan]{len(result.tools)}[/bold cyan] tools.")
