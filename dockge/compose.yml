@@ -34,4 +34,3 @@ services:
 networks:
   cloudflare-net:
     name: cloudflare-net
-    external: true
