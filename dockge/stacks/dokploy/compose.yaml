@@ -1,0 +1,69 @@
+services:
+  dokploy-redis:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - ./dokploy-redis:/data
+    networks:
+      - dokploy-network
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      interval: 5s
+      timeout: 3s
+      retries: 5
+  dokploy-postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: dokploy
+      POSTGRES_PASSWORD: dokploy
+      POSTGRES_DB: dokploy
+    volumes:
+      - ./dokploy-postgres:/var/lib/postgresql/data
+    networks:
+      - dokploy-network
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U dokploy
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  dokploy:
+    image: dokploy/dokploy:latest
+    restart: always
+    depends_on:
+      dokploy-postgres:
+        condition: service_healthy
+      dokploy-redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://dokploy:dokploy@dokploy-postgres:5432/dokploy
+      REDIS_URL: redis://dokploy-redis:6379
+    ports:
+      - 3003:3000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./dokploy-data:/etc/dokploy
+    networks:
+      - dokploy-network
+      - cloudflare-net
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=dokploy.huyab.click"
+      - "dockflare.service=http://dokploy:3000"
+      - "dockflare.access.group=admin-team"
+      
+#volumes:
+#  dokploy-postgres: null
+#  dokploy-data: null
+#  dokploy-redis: null
+networks:
+  dokploy-network: null
+  cloudflare-net:
+    name: cloudflare-net
+    external: true
