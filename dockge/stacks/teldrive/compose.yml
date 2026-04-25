@@ -1,0 +1,40 @@
+services:
+  teldrive:
+    image: ghcr.io/tgdrive/teldrive
+    restart: always
+    container_name: teldrive
+    volumes:
+      - ./config.toml:/config.toml
+      - ./storage.db:/storage.db
+    # ports:
+    #   - 8180:8080
+    depends_on:
+      - postgres
+    networks:
+      - cloudflare-net
+      - postgres
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=teldrive.huyab.click"
+      - "dockflare.service=http://teldrive:8080"
+      - "dockflare.access.group=admin-team"
+
+  postgres:
+    image: groonga/pgroonga:latest-alpine-17
+    container_name: postgres_db
+    restart: always
+    environment:
+      - POSTGRES_USER=teldrive
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - cloudflare-net
+      - postgres
+
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true
+  postgres:
