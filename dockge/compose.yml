@@ -1,0 +1,37 @@
+services:
+  dockge:
+    container_name: dockge
+    image: louislam/dockge:1
+    restart: unless-stopped
+    ports:
+      # Host Port : Container Port
+      - 5001:5001
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/app/data
+
+      # If you want to use private registries, you need to share the auth file with Dockge:
+      - /root/.docker/:/root/.docker
+
+      # Stacks Directory
+      # ⚠️ READ IT CAREFULLY. If you did it wrong, your data could end up writing into a WRONG PATH.
+      # ⚠️ 1. FULL path only. No relative path (MUST)
+      # ⚠️ 2. Left Stacks Path === Right Stacks Path (MUST)
+      - /mnt/DATA1T/selfhost/dockge/stacks:/mnt/DATA1T/selfhost/dockge/stacks
+    environment:
+      # Tell Dockge where is your stacks directory
+      - DOCKGE_STACKS_DIR=/mnt/DATA1T/selfhost/dockge/stacks
+      - DOCKGE_ENABLE_CONSOLE=true
+    # user: "1000:1000"
+    networks:
+      - cloudflare-net
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=dockge.huyab.click"
+      - "dockflare.service=http://dockge:5001"
+      - "dockflare.access.group=admin-team"
+
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true
