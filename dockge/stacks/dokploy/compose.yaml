@@ -51,19 +51,32 @@ services:
       - ./dokploy-data:/etc/dokploy
     networks:
       - dokploy-network
-      - cloudflare-net
-    labels:
-      - "dockflare.enable=true"
-      - "dockflare.hostname=dokploy.huyab.click"
-      - "dockflare.service=http://dokploy:3000"
-      - "dockflare.access.group=admin-team"
-      
-#volumes:
-#  dokploy-postgres: null
-#  dokploy-data: null
-#  dokploy-redis: null
+  traefik:
+    image: traefik:v2.11
+    restart: always
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=huy.ntq02@gmail.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--providers.file.directory=/etc/dokploy/traefik/dynamic"
+      - "--providers.file.watch=true"
+    # ports:
+    #   - "80:80"
+    #   - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./letsencrypt:/letsencrypt
+      - ./dokploy-data:/etc/dokploy
+    networks:
+      - dokploy-network
+
 networks:
-  dokploy-network: null
-  cloudflare-net:
-    name: cloudflare-net
-    external: true
+  dokploy-network:
+    name: dokploy-network
+    driver: overlay
+    attachable: true
