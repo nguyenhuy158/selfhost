@@ -1,0 +1,22 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    env_files:
+      - .env
+    volumes:
+      - ./vw-data/:/data/
+    # ports:
+    #   - 1508:80
+    networks:
+      - cloudflare-net
+    labels:
+      - dockflare.enable=true
+      - dockflare.hostname=pass.huyab.click
+      - dockflare.service=http://vaultwarden:80
+      - dockflare.access.group=admin-team
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true
