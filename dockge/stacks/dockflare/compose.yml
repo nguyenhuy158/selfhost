@@ -2,9 +2,14 @@ services:
   docker-socket-proxy:
     image: tecnativa/docker-socket-proxy:v0.4.1
     logging:
-      driver: "none"
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     container_name: docker-socket-proxy
     restart: unless-stopped
+    cpus: 0.25
+    mem_limit: 64m
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - CONTAINERS=1
@@ -38,6 +43,8 @@ services:
     image: alplat/dockflare:stable
     container_name: dockflare
     restart: unless-stopped
+    cpus: 0.5
+    mem_limit: 256m
     volumes:
       - dockflare_data:/app/data
     environment:
@@ -71,6 +78,8 @@ services:
     image: redis:7-alpine
     container_name: dockflare-redis
     restart: unless-stopped
+    cpus: 0.5
+    mem_limit: 128m
     command: [ "redis-server", "--save", "", "--appendonly", "no" ]
     volumes:
       - dockflare_redis:/data
