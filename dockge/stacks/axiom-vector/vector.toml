@@ -1,0 +1,11 @@
+[sources.docker_logs]
+type = "docker_logs"
+exclude_containers = ["axiom-vector"]
+
+[sinks.axiom]
+type = "axiom"
+inputs = ["docker_logs"]
+token = "${AXIOM_TOKEN}"
+dataset = "${AXIOM_DATASET}"
+org_id = "${AXIOM_ORG_ID}"
+region = "eu-central-1.aws.edge.axiom.co"
