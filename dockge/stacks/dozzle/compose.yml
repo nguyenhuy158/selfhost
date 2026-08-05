@@ -15,6 +15,8 @@ services:
       - DOZZLE_HOSTNAME=dozzle.huyab.click
       - DOZZLE_ENABLE_METRICS=true
     restart: always
+    cpus: 0.5
+    mem_limit: 256m
     healthcheck:
       test: ["CMD", "/dozzle", "healthcheck"]
       interval: 3s
