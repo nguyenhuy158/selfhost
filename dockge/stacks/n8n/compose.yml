@@ -23,10 +23,11 @@ services:
             - postgres
         ports:
             - '5678:5678'
+        env_file:
+            - .env
         environment:
             - N8N_METRICS=true
             - QUEUE_HEALTH_CHECK_ACTIVE=true
-            - N8N_ENCRYPTION_KEY=***REMOVED***
             # - N8N_LOG_LEVEL=debug
             # - N8N_LOG_OUTPUT=console,file
             # - N8N_LOG_FILE_LOCATION=/home/node/.n8n/logs/n8n.log
@@ -40,7 +41,6 @@ services:
             - DB_POSTGRESDB_PORT=5432
             - DB_POSTGRESDB_USER=n8n_user
             - DB_POSTGRESDB_SCHEMA=public
-            - DB_POSTGRESDB_PASSWORD=***REMOVED***
             - GENERIC_TIMEZONE=Asia/Ho_Chi_Minh
             - TZ=Asia/Ho_Chi_Minh
             # - WEBHOOK_URL=https://bestcyberbot.click
@@ -65,10 +65,11 @@ services:
     postgres:
         container_name: n8n_postgres
         image: postgres:14
+        env_file:
+            - .env
         environment:
             - POSTGRES_DB=n8n
             - POSTGRES_USER=n8n_user
-            - POSTGRES_PASSWORD=***REMOVED***
         # ports:
         #     - '5432:5432'
         volumes:
