@@ -1,0 +1,26 @@
+# Simple docker-compose.yml
+# You can change your port or volume location
+
+version: "3.3"
+services:
+  uptimekuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptimekuma
+    volumes:
+      - ./uptime-kuma-data:/app/data
+    ports:
+      - 3001:3001 # <Host Port>:<Container Port>
+    restart: always
+    cpus: 1.0
+    mem_limit: 512m
+    labels:
+      - dockflare.enable=true
+      - dockflare.hostname=uptime.huyab.click
+      - dockflare.service=http://uptimekuma:3001
+      - dockflare.access.group=admin-team
+    networks:
+      - cloudflare-net
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true

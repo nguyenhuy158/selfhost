@@ -1,0 +1,34 @@
+services:
+  termix:
+    image: ghcr.io/lukegus/termix:latest
+    container_name: termix
+    restart: unless-stopped
+    # ports:
+    #   - "6060:8080"
+    volumes:
+      - ./termix-data:/app/data
+    environment:
+      - PORT=8080
+      - NODE_ENV=production
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - cloudflare-net
+    labels:
+      dockflare.enable: "true"
+      dockflare.hostname: termix.huyab.click
+      dockflare.service: http://termix:8080
+      dockflare.access.group: admin-team
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+    user: "1000:1000"
+    cpus: 0.5
+    mem_limit: 256m
+
+networks:
+  cloudflare-net:
+    external: true
