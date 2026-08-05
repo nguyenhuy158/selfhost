@@ -50,7 +50,7 @@ services:
             - NODE_FUNCTION_ALLOW_BUILTIN=*
         volumes:
             - ./n8n_data:/home/node/.n8n
-            - /mnt/DATA1T/stash/data:/mnt/DATA1T/stash/data
+            - /mnt/DATA1T/selfhost/dockge/stacks/stash/data:/mnt/DATA1T/stash/data
         restart: unless-stopped
         # networks:
         #     - nginx_network
