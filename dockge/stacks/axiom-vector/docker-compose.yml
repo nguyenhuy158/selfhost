@@ -1,17 +1,43 @@
 services:
   vector:
-    image: timberio/vector:0.52.0-alpine
+    image: timberio/vector:0.52.0-debian
     container_name: axiom-vector
     restart: unless-stopped
     volumes:
       - ./vector.toml:/etc/vector/vector.toml:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host/root:ro
+      - /var/log/journal:/var/log/journal:ro
+      - /run/log/journal:/run/log/journal:ro
+      - /etc/machine-id:/etc/machine-id:ro
+      - /nix:/nix:ro
+      - /run/current-system:/run/current-system:ro
     environment:
       - AXIOM_TOKEN=${AXIOM_TOKEN}
       - AXIOM_DATASET=${AXIOM_DATASET}
       - AXIOM_ORG_ID=${AXIOM_ORG_ID}
+      - AXIOM_METRICS_DATASET=${AXIOM_METRICS_DATASET}
+      - PROCFS_ROOT=/host/proc
+      - SYSFS_ROOT=/host/sys
     command:
       - --config
       - /etc/vector/vector.toml
+    depends_on:
+      - cadvisor
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: cadvisor
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+
 networks: {}
