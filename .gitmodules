@@ -20,3 +20,6 @@
 	path = dockge/stacks/server-control
 	url = git@github.com:nguyenhuy158/server-control.git
 	branch = go
+[submodule "dockge/stacks/chi-tieu"]
+	path = dockge/stacks/chi-tieu
+	url = git@github.com:nguyenhuy158/finance-management.git
