@@ -26,3 +26,13 @@
 [submodule "dockge/stacks/huy-cheatsheet"]
 	path = dockge/stacks/huy-cheatsheet
 	url = git@github.com:nguyenhuy158/cheatsheet.git
+[submodule "dockge/stacks/service-hub"]
+	path = dockge/stacks/service-hub
+	url = git@github.com:nguyenhuy158/service-portal.git
+[submodule "dockge/stacks/mock-server"]
+	path = dockge/stacks/mock-server
+	url = git@github.com:nguyenhuy158/mock-server.git
+	branch = master
+[submodule "dockge/stacks/auto-rename"]
+	path = dockge/stacks/auto-rename
+	url = git@github.com:nguyenhuy158/auto-rename
