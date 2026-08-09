@@ -69,7 +69,10 @@ services:
       - "dockflare.service=http://dockflare:5000"
       - "dockflare.access.group=admin-team"
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:5000/ping" ]
+      # Image không có curl — healthcheck cũ dùng curl nên exec luôn fail
+      # ("executable file not found in $PATH"), container báo unhealthy vĩnh
+      # viễn dù app vẫn phục vụ bình thường. Python có sẵn trong image.
+      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/ping').read()" ]
       interval: 30s
       timeout: 10s
       retries: 3
