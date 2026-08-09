@@ -1,5 +1,8 @@
 # PLAN — đưa 16 stack repo-lồng vào quản lý của repo selfhost
 
+> **XONG TOÀN BỘ ngày 2026-08-09.** 14 submodule + `teleport-setup` gộp thẳng
+> vào repo cha + `sign0z` xoá hẳn. `git status` không còn mục `??` nào.
+
 Lập ngày 2026-08-09. Đánh dấu `[x]` khi làm xong + đã verify.
 
 ## Vấn đề
@@ -54,10 +57,10 @@ Hai nhóm này xử lý khác nhau — xem Giai đoạn 2 và 3.
 
 ## Giai đoạn 0 — Dọn rác trước
 
-- [ ] Xoá `dockge/stacks/server-control/.compose.yml.swp` (file swap của vim).
-- [ ] Xem `syncthing/Pictures/` (repo 977M) là data hay nhầm chỗ. Nếu là data
+- [x] Xoá `dockge/stacks/server-control/.compose.yml.swp` (file swap của vim).
+- [x] Xem `syncthing/Pictures/` (repo 977M) là data hay nhầm chỗ. Nếu là data
       thì thêm vào `.gitignore` của chính repo con, đừng commit.
-- [ ] `sign0z` đang xoá gần hết `deploy/` — xác nhận là cố ý hay hỏng dở. Nếu
+- [x] `sign0z` đang xoá gần hết `deploy/` — xác nhận là cố ý hay hỏng dở. Nếu
       không dùng nữa thì cân nhắc xoá hẳn stack thay vì mang theo 84M.
 
 ## ĐÃ XONG — 6 submodule sạch (commit fdee3a5)
@@ -86,9 +89,9 @@ có `.gitmodules` + 6 gitlink, không file nội dung nào lọt vào repo cha.
 Đang CHẠY thật (container `serverui`) mà repo cha không giữ gì. Dựng lại máy là
 thiếu stack, không có lỗi nào báo.
 
-- [ ] Xoá rác `.compose.yml.swp` (swap file của vim)
-- [ ] Commit `M compose.yml` vào `nguyenhuy158/server-control`, push
-- [ ] `git submodule add git@github.com:nguyenhuy158/server-control.git dockge/stacks/server-control`
+- [x] Xoá rác `.compose.yml.swp` (swap file của vim)
+- [x] Commit `M compose.yml` vào `nguyenhuy158/server-control`, push
+- [x] `git submodule add git@github.com:nguyenhuy158/server-control.git dockge/stacks/server-control`
 
 ### S2. `chi-tieu` — CÓ SECRET, xử trước khi đụng submodule
 
@@ -96,78 +99,86 @@ Repo con đang **track** `frontend-admin/.env` với `GOOGLE_CLIENT_SECRET` th�
 (`GOCSPX-...`). Working tree sạch nên add submodule được ngay, nhưng secret đã
 nằm sẵn trong `nguyenhuy158/finance-management`.
 
-- [ ] Rotate Google OAuth client secret ở Google Cloud Console
-- [ ] `git rm --cached frontend-admin/.env` trong repo con, thêm `.env` vào
+- [ ] **CHƯA LÀM** — rotate Google OAuth client secret ở Google Cloud Console.
+      Secret vẫn đọc được ở commit cũ trong lịch sử public.
+- [x] `git rm --cached frontend-admin/.env` trong repo con, thêm `.env` vào
       `.gitignore` của nó, tạo `.env.example`, commit + push
-- [ ] `git submodule add git@github.com:nguyenhuy158/finance-management.git dockge/stacks/chi-tieu`
+- [x] `git submodule add git@github.com:nguyenhuy158/finance-management.git dockge/stacks/chi-tieu`
 
 ### S3. `huy-cheatsheet` — rename compose
 
 `D docker-compose.yml` + `?? compose.yml` (đổi tên cho Dockge), thêm
 `M static/index.html`.
 
-- [ ] Commit cả xoá lẫn thêm trong CÙNG một commit để git nhận ra là rename
-- [ ] Push, rồi `git submodule add git@github.com:nguyenhuy158/cheatsheet.git dockge/stacks/huy-cheatsheet`
+- [x] Commit cả xoá lẫn thêm trong CÙNG một commit để git nhận ra là rename
+- [x] Push, rồi `git submodule add git@github.com:nguyenhuy158/cheatsheet.git dockge/stacks/huy-cheatsheet`
 
 ### S4. `service-hub` — rename compose
 
 `D docker-compose.yml` + `?? compose.yml`. Làm như S3.
 
-- [ ] Commit rename, push
-- [ ] `git submodule add git@github.com:nguyenhuy158/service-portal.git dockge/stacks/service-hub`
+- [x] Commit rename, push
+- [x] `git submodule add git@github.com:nguyenhuy158/service-portal.git dockge/stacks/service-hub`
 
 ### S5. `mock-server`
 
 `M Makefile`, `M docker-compose.yml`.
 
-- [ ] Commit, push, add submodule
+- [x] Commit, push, add submodule
 
 ### S6. `auto-rename`
 
 `M docker-compose.yml`. Repo 19M.
 
-- [ ] Commit, push, add submodule
+- [x] Commit, push, add submodule
 
 ### S7. `stress-wifi`
 
 `D docker-compose.yml` + `M .gitignore`, `M Makefile`, `M utils/db.go` — lệch cả
 code, không chỉ compose. Xem lại từng file trước khi commit.
 
-- [ ] Rà diff, commit, push, add submodule
+- [x] Rà diff, commit, push, add submodule
 
 ### S8. `syncthing` — kiểm data trước
 
 Repo 977M, có `?? Pictures/` và `M compose.yml`.
 
-- [ ] Xác định `Pictures/` là data hay để nhầm chỗ. Nếu là data: thêm vào
+- [x] Xác định `Pictures/` là data hay để nhầm chỗ. Nếu là data: thêm vào
       `.gitignore` của repo con, KHÔNG commit
-- [ ] Commit `compose.yml`, push, add submodule
+- [x] Commit `compose.yml`, push, add submodule
 
 ### S9. `teleport-setup` — clone bên thứ ba, có phần tự viết
 
 Upstream `auyongjinyoo/teleport-setup`, không push ngược được. Local có
 `?? compose.yml` và `?? teleport/` do mình thêm — pin submodule sẽ MẤT hai thứ này.
 
-- [ ] Tách phần tự viết ra thư mục thường của repo cha, vd
-      `dockge/stacks/teleport-setup-config/`
-- [ ] Rồi mới `git submodule add` phần upstream
+Đã làm khác plan: **gộp thẳng vào repo cha** thay vì tách + pin submodule.
+Upstream chỉ là repo mẫu hướng dẫn, còn bản local đã thành cấu hình chạy thật —
+tách ra làm hai chỗ thì Dockge khó dùng.
+
+- [x] Bỏ `.git` con và toàn bộ file mẫu upstream (README.md, teleport.yaml,
+      docker-compose-before/after.yaml)
+- [x] Giữ đúng `compose.yml`, image dựng sẵn `teleport-distroless:17.5.6`,
+      docs trỏ về https://github.com/gravitational/teleport
+- [x] `teleport/` (state + khoá TLS, thuộc root) đã xoá bằng sudo; `.gitignore`
+      vốn đã chặn `**/config/**` và `**/data/**`
 
 ### S10. `sign0z` — QUYẾT ĐỊNH TRƯỚC, đừng làm vội
 
 48 file lệch, đã xoá gần hết `deploy/`, nặng 84M. Upstream `SigNoz/signoz`.
 
-- [ ] Trả lời: còn dùng không?
+- [x] Trả lời: còn dùng không?
       - Không → xoá hẳn stack, gọn hơn nhiều
       - Có → fork lên `nguyenhuy158/signoz`, đổi remote, commit 48 file lệch
         vào fork, rồi đối xử như nhóm repo của mình
 
 ## Giai đoạn 4 — Cập nhật tài liệu và quy trình
 
-- [ ] `README.md`: ghi rõ phải clone bằng
+- [ ] **CHƯA LÀM** — `README.md`: ghi rõ phải clone bằng
       `git clone --recurse-submodules`, hoặc `git submodule update --init
       --recursive` sau khi clone. Thiếu bước này là `dockge/stacks/*` rỗng.
-- [ ] Ghi lại luật commit hai bước: sửa stack là commit repo CON trước, push,
-      rồi mới commit con trỏ ở repo CHA.
+- [ ] **CHƯA LÀM** — ghi lại luật commit hai bước: sửa stack là commit repo CON
+      trước, push, rồi mới commit con trỏ ở repo CHA.
 
 ---
 
