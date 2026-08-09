@@ -36,3 +36,6 @@
 [submodule "dockge/stacks/auto-rename"]
 	path = dockge/stacks/auto-rename
 	url = git@github.com:nguyenhuy158/auto-rename
+[submodule "dockge/stacks/stress-wifi"]
+	path = dockge/stacks/stress-wifi
+	url = git@github.com:nguyenhuy158/stress-wifi
