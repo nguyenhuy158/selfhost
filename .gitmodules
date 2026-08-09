@@ -39,3 +39,6 @@
 [submodule "dockge/stacks/stress-wifi"]
 	path = dockge/stacks/stress-wifi
 	url = git@github.com:nguyenhuy158/stress-wifi
+[submodule "dockge/stacks/syncthing"]
+	path = dockge/stacks/syncthing
+	url = git@github.com:nguyenhuy158/syncthing.git
