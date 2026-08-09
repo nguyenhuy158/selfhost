@@ -1,0 +1,18 @@
+[submodule "dockge/stacks/temporalio/docker-compose"]
+	path = dockge/stacks/temporalio/docker-compose
+	url = https://github.com/temporalio/docker-compose.git
+[submodule "dockge/stacks/firecrawl/repo"]
+	path = dockge/stacks/firecrawl/repo
+	url = https://github.com/mendableai/firecrawl.git
+[submodule "dockge/stacks/gemini-usage-tracker"]
+	path = dockge/stacks/gemini-usage-tracker
+	url = git@github.com:nguyenhuy158/gemini-usage-tracker.git
+[submodule "dockge/stacks/open-webhook"]
+	path = dockge/stacks/open-webhook
+	url = git@github.com:nguyenhuy158/open-webhook.git
+[submodule "dockge/stacks/superset"]
+	path = dockge/stacks/superset
+	url = https://github.com/apache/superset.git
+[submodule "dockge/stacks/webhook-tester"]
+	path = dockge/stacks/webhook-tester
+	url = git@github.com:nguyenhuy158/webhook-tester.git
