@@ -16,3 +16,7 @@
 [submodule "dockge/stacks/webhook-tester"]
 	path = dockge/stacks/webhook-tester
 	url = git@github.com:nguyenhuy158/webhook-tester.git
+[submodule "dockge/stacks/server-control"]
+	path = dockge/stacks/server-control
+	url = git@github.com:nguyenhuy158/server-control.git
+	branch = go
