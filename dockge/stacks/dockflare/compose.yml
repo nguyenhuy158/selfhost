@@ -89,18 +89,6 @@ services:
     networks:
       - dockflare-internal
 
-  picoshare:
-    image: mtlynch/picoshare
-    environment:
-      - PS_SHARED_SECRET=huy
-    labels:
-      - "dockflare.enable=true"
-      - "dockflare.hostname=files.huyab.click"
-      - "dockflare.service=http://picoshare:4001"
-      - "dockflare.access.group=nas-family"
-    networks:
-      - cloudflare-net
-
   internal-tool:
     image: nginx:latest
     labels:
