@@ -23,3 +23,6 @@
 [submodule "dockge/stacks/chi-tieu"]
 	path = dockge/stacks/chi-tieu
 	url = git@github.com:nguyenhuy158/finance-management.git
+[submodule "dockge/stacks/huy-cheatsheet"]
+	path = dockge/stacks/huy-cheatsheet
+	url = git@github.com:nguyenhuy158/cheatsheet.git
