@@ -1,0 +1,60 @@
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./prowlarr/data:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000         # sửa lại cho đúng máy bạn
+      - PGID=1000
+      - TZ=Asia/Ho_Chi_Minh
+      - WEBUI_PORT=8910   # cổng web UI
+    volumes:
+      - ./qbittorrent/config:/config
+      - ./qbittorrent/downloads:/downloads
+    ports:
+      - 8910:8910         # web UI
+      - 6881:6881         # torrent port
+      - 6881:6881/udp     # DHT port
+    restart: unless-stopped
+
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    ports:
+      - 8096:8096 # Web UI port
+    volumes:
+      - ./jellyfin/config:/config       # Jellyfin config files
+      - ./jellyfin/cache:/cache         # Transcoding cache
+      # - ./media:/media         # Your media files
+      - ./qbittorrent/downloads:/media
+    restart: unless-stopped
+
+  # deluge:
+  #   image: lscr.io/linuxserver/deluge:latest
+  #   container_name: deluge
+  #   environment:
+  #     - PUID=1000             # sửa theo user host
+  #     - PGID=1000
+  #     - TZ=Asia/Ho_Chi_Minh
+  #   volumes:
+  #     - ./deluge/config:/config
+  #     - ./deluge/downloads:/downloads
+  #   ports:
+  #     - 8112:8112             # Web UI
+  #     - 6881:6881             # torrent TCP
+  #     - 6881:6881/udp         # torrent UDP
+  #   restart: unless-stopped

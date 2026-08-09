@@ -1,0 +1,14 @@
+
+services:
+  caprover:
+    image: caprover/caprover
+    container_name: caprover
+    restart: always
+    ports:
+      - "88:80"
+      - "443:443"
+      - "3000:3000"
+    environment:
+      MAIN_NODE_IP: "YOUR_SERVER_IP"
+      CAPROVER_ROOT_DOMAIN: "ss.huycode.click"
+

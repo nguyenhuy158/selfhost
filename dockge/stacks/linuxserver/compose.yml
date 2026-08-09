@@ -1,0 +1,74 @@
+
+services:
+#   brave:
+#     image: lscr.io/linuxserver/brave:latest
+#     container_name: brave
+#     security_opt:
+#       - seccomp:unconfined #optional
+#     environment:
+#       - PUID=1000
+#       - PGID=1000
+#       - TZ=Etc/UTC
+#     volumes:
+#       - /path/to/config:/config
+#     ports:
+#       - 3000:3000
+#       - 3001:3001
+#     shm_size: "1gb"
+#     restart: unless-stopped
+# 
+#   changedetection:
+#     image: lscr.io/linuxserver/changedetection.io:latest
+#     container_name: changedetection
+#     environment:
+#       - PUID=1000
+#       - PGID=1000
+#       - TZ=Etc/UTC
+#       - BASE_URL= #optional
+#       - PLAYWRIGHT_DRIVER_URL= #optional
+#     volumes:
+#       - /path/to/changedetection/config:/config
+#     ports:
+#       - 5555:5000
+#     restart: unless-stopped
+
+  mullvad-browser:
+    image: lscr.io/linuxserver/mullvad-browser:latest
+    container_name: mullvad-browser
+    cap_add:
+      - NET_ADMIN
+    security_opt:
+      - seccomp:unconfined #optional
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - LOCAL_NET=192.168.0.0/16 #optional
+    volumes:
+      - /path/to/mullvad-browser/config:/config
+    ports:
+      - 3000:3000
+      - 3001:3001
+    shm_size: "1gb"
+    restart: unless-stopped
+
+#   kali-linux:
+#     image: lscr.io/linuxserver/kali-linux:latest
+#     container_name: kali-linux
+#     security_opt:
+#       - seccomp:unconfined #optional
+#     environment:
+#       - PUID=1000
+#       - PGID=1000
+#       - TZ=Etc/UTC
+#       - SUBFOLDER=/ #optional
+#       - "TITLE=Kali Linux" #optional
+#     volumes:
+#       - /path/to/data:/config
+#       - /var/run/docker.sock:/var/run/docker.sock #optional
+#     ports:
+#       - 3000:3000
+#       - 3001:3001
+#     shm_size: "1gb" #optional
+#     restart: unless-stopped
+# 

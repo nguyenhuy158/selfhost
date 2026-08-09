@@ -1,0 +1,12 @@
+services:
+  cloudflared:
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    network_mode: host
+    ports:
+      - "60123:60123"
+      - "20241:20241"
+    volumes:
+      - ./cloudflared:/etc/cloudflared
+    restart: always

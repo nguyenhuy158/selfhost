@@ -1,0 +1,52 @@
+
+services:
+  calibre:
+    image: linuxserver/calibre
+    container_name: calibre
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ./config/calibre:/config
+      - ./books:/books
+    # ports:
+    #   - 8088:8080 # Calibre server
+    #   - 8089:8081 # Content server
+    restart: unless-stopped
+
+    networks:
+      - cloudflare-net
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=calibre.huyab.click"
+      - "dockflare.service=http://calibre:8080"
+      - "dockflare.access.group=admin-team"
+
+  calibre-web:
+    image: linuxserver/calibre-web
+    container_name: calibre-web
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ./config/calibre-web:/config
+      - ./books:/books
+      - ./config/calibre:/calibre
+    # ports:
+    #   - 8083:8083
+    restart: unless-stopped
+
+    networks:
+      - cloudflare-net
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=calibre-web.huyab.click"
+      - "dockflare.service=http://calibre-web:8083"
+      - "dockflare.access.group=admin-team"
+
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true

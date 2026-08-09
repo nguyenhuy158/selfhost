@@ -1,0 +1,18 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    container_name: homeassistant
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+    volumes:
+      - ./config:/config
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      TZ: ${TZ}
+    labels:
+      - dockflare.enable=true
+      - dockflare.hostname=home.huyab.click
+      - dockflare.service=http://homeassistant:8123
+      - dockflare.access.group=admin-team
+networks: {}

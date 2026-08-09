@@ -1,0 +1,9 @@
+services:
+  cloudflare-ui:
+    container_name: cloudflare-ui
+    image: ${IMAGE_NAME:-nguyenhuy158/cloudflare-ui}:${IMAGE_TAG:-latest}
+    ports:
+      - "${PORT:-8000}:${PORT:-8000}"
+    env_file:
+      - ../.env
+    restart: always

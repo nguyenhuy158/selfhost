@@ -1,0 +1,63 @@
+networks:
+  monitor:
+    external: true
+
+services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    # network_mode: host
+    network_mode: host
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./web.yml:/etc/prometheus/web.yml
+      - ./prometheus_data:/prometheus
+    ports:
+      - "9999:9090"
+    restart: always
+    # networks:
+    #   - monitor
+    user: root
+
+  # node-exporter:
+  #   container_name: node-exporter
+  #   image: prom/node-exporter
+  #   restart: always
+  #   networks:
+  #     - monitor
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    command:
+      - '--path.rootfs=/host'
+    network_mode: host
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+
+  cadvisor:
+    container_name: cadvisor
+    image: gcr.io/cadvisor/cadvisor:latest
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: always
+    # networks:
+    #   - monitor
+    network_mode: host
+
+#   pgwatch:
+#     image: cybertec/pgwatch2
+#     container_name: pgwatch
+#     # network_mode: host
+#     ports:
+#       - "8888:8080"
+#     environment:
+#       - PW2_PGHOST=localhost:5432
+#       - PW2_PGUSER=postgres
+#       - PW2_PGPASSWORD=postgres
+#     restart: always

@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+    restart: unless-stopped
+    user: 1000:1000
+    networks:
+      - cloudflare-net
+    labels:
+      - dockflare.enable=true
+      - dockflare.hostname=jenkins.huyab.click
+      - dockflare.service=http://jenkins:8080
+      - dockflare.access.group=admin-team
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true

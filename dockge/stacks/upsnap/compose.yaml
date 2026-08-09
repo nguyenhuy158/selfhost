@@ -1,0 +1,10 @@
+services:
+  upsnap:
+    image: ghcr.io/seriousm4x/upsnap:3
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - /mnt/DATA1T/dockge/stacks/upsnap/data:/app/pb_data
+    ports:
+      - 8090:8090
+networks: {}

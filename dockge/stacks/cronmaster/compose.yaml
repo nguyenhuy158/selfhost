@@ -1,0 +1,32 @@
+services:
+  cronmaster:
+    image: ghcr.io/fccview/cronmaster:latest
+    container_name: cronmaster
+    user: root
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=production
+      - AUTH_PASSWORD=${CRONMASTER_AUTH_PASSWORD}
+      - HOST_CRONTAB_USER=root
+      - HOST_PATH=/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./scripts:/app/scripts
+      - ./data:/app/data
+      - ./snippets:/app/snippets
+    pid: host
+    privileged: true
+    restart: always
+    init: true
+    networks:
+      - cloudflare-net
+    labels:
+      - dockflare.enable=true
+      - dockflare.hostname=cron.huyab.click
+      - dockflare.service=http://cron:3000
+      - dockflare.access.group=admin-team
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true

@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  zookeeper:
+    image: signoz/zookeeper:3.7.1
+    container_name: signoz-zookeeper
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    ports:
+      - "2181:2181"
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:23.3
+    container_name: signoz-clickhouse
+    ports:
+      - "9000:9000"
+      - "8123:8123"
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+
+  otel-collector:
+    image: signoz/signoz-otel-collector:latest
+    container_name: signoz-otel
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    depends_on:
+      - clickhouse
+    ports:
+      - "4317:4317" # gRPC
+      - "4318:4318" # HTTP
+
+  query-service:
+    image: signoz/query-service:latest
+    container_name: signoz-query
+    environment:
+      - ClickHouseUrl=tcp://clickhouse:9000
+    depends_on:
+      - clickhouse
+    ports:
+      - "8080:8080"
+
+  frontend:
+    image: signoz/frontend:latest
+    container_name: signoz-frontend
+    depends_on:
+      - query-service
+    ports:
+      - "3301:3301"
+    networks:
+      - cloudflare-net
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=signoz.huyab.click"
+      - "dockflare.service=http://frontend:3301"
+      - "dockflare.access.group=admin-team"
+
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true
+
+volumes:
+  clickhouse-data:

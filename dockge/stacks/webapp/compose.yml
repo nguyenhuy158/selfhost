@@ -1,0 +1,11 @@
+
+services:
+  simple-webapp:
+    image: ghcr.io/patrick204nqh/simple-webapp:latest
+    container_name: simple-webapp
+    ports:
+      - "80:80"
+      - "61208:61208"
+    volumes:
+      - ./services.json:/app/config/services.json:ro
+    restart: unless-stopped

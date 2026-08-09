@@ -1,0 +1,49 @@
+# Whitelist: chặn hết, chỉ mở đúng thứ cần track.
+#
+# Trước đây file này là blacklist — liệt kê từng thư mục data để loại trừ.
+# Cách đó không theo kịp: dockge/stacks/ có ~150 stack, thêm stack mới là
+# thêm data dir mới, quên thêm dòng ignore là commit nhầm data (hoặc secret).
+# Kiểm ngày 2026-08-09: 57/64 file .env KHÔNG hề được ignore.
+#
+# Whitelist thì mặc định an toàn: stack mới chỉ lọt compose.yml + tài liệu,
+# mọi thứ khác câm cho tới khi mở tay.
+
+# --- Chặn tất cả ---
+*
+
+# Cho git đi vào thư mục con. BẮT BUỘC: không có dòng này thì `*` chặn luôn cả
+# thư mục, git không xuống được cấp dưới và mấy dòng `!` bên dưới vô nghĩa.
+!*/
+
+# --- Mở đúng những thứ cần track ---
+!compose.yml
+!compose.yaml
+!docker-compose.yml
+!docker-compose.yaml
+!*.md
+!*.sh
+!.gitignore
+!.env.example
+
+# --- Secret: chặn lại lần nữa cho chắc ---
+# `*` ở trên đã chặn rồi, nhưng khai lại tường minh để sau này ai đó thêm một
+# dòng `!` rộng tay cũng không vô tình mở cửa cho .env.
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.sql
+secrets.*
+
+# --- Data dir: chặn cả cây, kể cả .md/.sh nằm bên trong ---
+# `*.md`/`*.sh` ở trên khớp mọi cấp, nên thư mục data có sẵn README hay script
+# của upstream sẽ bị hút vào. Mấy dòng dưới đóng lại.
+**/data/**
+**/*_data/**
+**/*-data/**
+**/config/**
+**/postgres/**
+jellyfin/library/**
+ghost/some-ghost-data/**
+qbittorrent/downloads/**

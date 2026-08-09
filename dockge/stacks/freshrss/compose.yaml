@@ -1,0 +1,25 @@
+volumes:
+  data: null
+  extensions: null
+services:
+  freshrss:
+    image: freshrss/freshrss:latest
+    container_name: freshrss
+    hostname: freshrss
+    restart: unless-stopped
+    volumes:
+      - data:/var/www/FreshRSS/data
+      - extensions:/var/www/FreshRSS/extensions
+    environment:
+      TZ: ${TZ}
+      CRON_MIN: ${CRON_MIN}
+      TRUSTED_PROXY: 172.16.0.1/12 192.168.0.1/16
+    networks: []
+    ports:
+      - 8085:8080
+    labels:
+      - dockflare.enable=true
+      - dockflare.hostname=rss.huyab.click
+      - dockflare.service=http://freshrss:8080
+      - dockflare.access.group=admin-team
+networks: {}

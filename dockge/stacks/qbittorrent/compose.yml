@@ -1,0 +1,31 @@
+
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000         # sửa lại cho đúng máy bạn
+      - PGID=1000
+      - TZ=Asia/Ho_Chi_Minh
+      - WEBUI_PORT=8080   # cổng web UI
+    volumes:
+      - ./qbittorrent/config:/config
+      - ./qbittorrent/downloads:/downloads
+    # ports:
+    #   - 8080:8080         # web UI
+    #   - 6881:6881         # torrent port
+    #   - 6881:6881/udp     # DHT port
+    restart: unless-stopped
+
+    networks:
+      - cloudflare-net
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=qbittorrent.huyab.click"
+      - "dockflare.service=http://qbittorrent:8080"
+      - "dockflare.access.group=admin-team"
+
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true

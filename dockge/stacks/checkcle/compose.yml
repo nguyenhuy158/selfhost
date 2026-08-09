@@ -1,0 +1,44 @@
+
+version: '3.9'
+
+services:
+  checkcle:
+    image: operacle/checkcle:latest
+    container_name: checkcle
+    restart: unless-stopped
+    ports:
+      - "8090:8090"  # Web Application
+    volumes:
+      - ./opt/pb_data:/mnt/pb_data  # Host directory mapped to container path
+    ulimits:
+      nofile:
+        soft: 4096
+        hard: 8192
+  monitoring-agent:
+    image: operacle/checkcle-server-agent:latest
+    container_name: monitoring-agent
+    restart: unless-stopped
+    ports:
+      - "8085:8081"
+    group_add:
+      - "999"
+    environment:
+      AGENT_ID: "${CHECKCLE_AGENT_ID}"
+      SERVER_NAME: ""
+      SERVER_TOKEN: "${CHECKCLE_SERVER_TOKEN}"
+      POCKETBASE_URL: "${CHECKCLE_POCKETBASE_URL}"
+      POCKETBASE_ENABLED: "true"
+    volumes:
+      - /proc:/host/proc:ro
+      - /etc:/host/etc:ro
+      - /sys:/host/sys:ro
+      - /:/host/root:ro
+      - /var/run:/host/var/run:ro
+      - /dev:/host/dev:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - monitoring_data:/var/lib/monitoring-agent
+      - monitoring_logs:/var/log/monitoring-agent
+
+volumes:
+  monitoring_data:
+  monitoring_logs:

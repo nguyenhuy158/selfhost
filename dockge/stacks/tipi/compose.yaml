@@ -1,0 +1,64 @@
+services:
+  runtipi:
+    image: ghcr.io/runtipi/runtipi:latest
+    container_name: runtipi
+    restart: unless-stopped
+    ports:
+      - "80:3000"
+      - "443:3001"
+    volumes:
+      - ./runtipi/app-data:/app/data
+      - ./runtipi/repos:/app/repos
+      - ./runtipi/state:/app/state
+      - ./runtipi/logs:/app/logs
+      - ./runtipi/media:/app/media
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - NODE_ENV=production
+      - INTERNAL_IP=0.0.0.0
+      - APPS_REPO_ID=runtipi-appstore
+      - APPS_REPO_URL=https://github.com/runtipi/runtipi-appstore
+      - DOMAIN=localhost
+      - POSTGRES_HOST=runtipi-db
+      - POSTGRES_DB=tipi
+      - POSTGRES_USER=tipi
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-changeme123}
+      - REDIS_HOST=runtipi-redis
+      - JWT_SECRET=${JWT_SECRET:-your-jwt-secret-key}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-your-encryption-key}
+    depends_on:
+      - runtipi-db
+      - runtipi-redis
+    networks:
+      - runtipi
+
+  runtipi-db:
+    image: postgres:15-alpine
+    container_name: runtipi-db
+    restart: unless-stopped
+    volumes:
+      - runtipi-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=tipi
+      - POSTGRES_USER=tipi
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-changeme123}
+    networks:
+      - runtipi
+
+  runtipi-redis:
+    image: redis:7-alpine
+    container_name: runtipi-redis
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD:-changeme123}
+    volumes:
+      - runtipi-redis-data:/data
+    networks:
+      - runtipi
+
+volumes:
+  runtipi-db-data:
+  runtipi-redis-data:
+
+networks:
+  runtipi:
+    driver: bridge

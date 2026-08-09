@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:14
+    container_name: freshrss-db
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: freshrss
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PW}
+  freshrss:
+    image: freshrss/freshrss:latest
+    container_name: freshrss-app
+    restart: unless-stopped
+    ports:
+      - ${PORT}:80
+    depends_on:
+      - db
+    volumes:
+      - ./data:/var/www/FreshRSS/data
+      - ./extensions:/var/www/FreshRSS/extensions
+    environment:
+      TZ: ${TZ}
+      CRON_MIN: ${CRON_MIN}
+      DB_HOST: db
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PW}
+      DB_BASE: freshrss
+    labels:
+      - dockflare.enable=true
+      - dockflare.hostname=rss.huyab.click
+      - dockflare.service=http://freshrss-app:80
+      - dockflare.access.group=admin-team
+volumes:
+  db_data: null
+networks: {}

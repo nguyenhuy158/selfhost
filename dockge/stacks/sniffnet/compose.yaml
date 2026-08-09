@@ -1,0 +1,17 @@
+services:
+  sniffnet:
+    stdin_open: true
+    tty: true
+    network_mode: host
+    volumes:
+      - $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:/tmp/$WAYLAND_DISPLAY
+    environment:
+      - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
+      - XDG_RUNTIME_DIR=/tmp
+      - RUST_BACKTRACE=full
+      - ICED_BACKEND=tiny-skia
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    image: ghcr.io/gyulyvgc/sniffnet:latest
+networks: {}

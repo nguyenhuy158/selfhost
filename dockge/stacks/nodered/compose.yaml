@@ -1,0 +1,12 @@
+services:
+  node-red:
+    image: nodered/node-red:latest
+    container_name: node-red
+    restart: unless-stopped
+    ports:
+      - ${PORT}:1880
+    #volumes:
+    #  - ./data:/data
+    environment:
+      TZ: ${TZ}
+networks: {}

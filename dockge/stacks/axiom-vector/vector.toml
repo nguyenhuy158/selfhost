@@ -15,9 +15,23 @@ type = "journald"
 journal_directory = "/var/log/journal"
 include_units = ["xrdp", "xrdp-sesman"]
 
+# systemd --user unit (vd change-wallpaper.service) không nằm trong _SYSTEMD_UNIT
+# (field đó luôn là "user@<uid>.service" cho mọi log của user session) -> phải
+# lấy hết log của user@1000.service rồi lọc theo _SYSTEMD_USER_UNIT bên dưới,
+# include_units không filter được trực tiếp theo tên unit user.
+[sources.journald_logs_user]
+type = "journald"
+journal_directory = "/var/log/journal"
+include_units = ["user@1000.service"]
+
+[transforms.filter_user_units]
+type = "filter"
+inputs = ["journald_logs_user"]
+condition = '._SYSTEMD_USER_UNIT == "change-wallpaper.service"'
+
 [sinks.axiom_journald]
 type = "axiom"
-inputs = ["journald_logs"]
+inputs = ["journald_logs", "filter_user_units"]
 token = "${AXIOM_TOKEN}"
 dataset = "${AXIOM_DATASET}"
 org_id = "${AXIOM_ORG_ID}"
