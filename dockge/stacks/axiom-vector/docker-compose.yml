@@ -33,6 +33,15 @@ services:
     container_name: cadvisor
     restart: unless-stopped
     privileged: true
+    # Giảm tải: housekeeping mặc định 1s quét lại toàn bộ container -> ăn CPU
+    # liên tục. Giãn ra 15s (đủ nhanh cho dashboard/alert Axiom) và tắt các
+    # nhóm metric không dùng tới (accelerator/hugetlb/tcp/udp/...).
+    command:
+      - --housekeeping_interval=60s
+      - --docker_only=true
+      - --disable_metrics=disk,hugetlb,referenced_memory,resctrl,tcp,udp,percpu,sched,process
+    cpus: 0.3
+    mem_limit: 200m
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
