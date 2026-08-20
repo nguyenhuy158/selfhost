@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "9876:80"
+    volumes:
+      - ./web:/usr/share/nginx/html
+    depends_on:
+      - proxy
+    restart: unless-stopped
+
+  proxy:
+    build: .
+    command: node /app/proxy.js
+    ports:
+      - "3453:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped

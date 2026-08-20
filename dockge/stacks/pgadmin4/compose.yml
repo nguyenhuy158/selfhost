@@ -1,0 +1,44 @@
+
+services:
+  db:
+    image: postgres:15
+    container_name: pgadmin_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pgadmin
+    restart: always
+    # volumes:
+    #   - ./pgdata:/var/lib/postgresql/data
+    # ports:
+    #   - "5432:5432"
+    # user: "0:0"
+    networks:
+      - cloudflare-net
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    # ports:
+    #   - "5050:80"
+    depends_on:
+      - db
+    # volumes:
+    #   - ./pgadmin_data:/var/lib/pgadmin
+    restart: always
+    user: "0:0"
+    networks:
+      - cloudflare-net
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=pgadmin.huyab.click"
+      - "dockflare.service=http://pgadmin:80"
+      - "dockflare.access.group=admin-team"
+
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true

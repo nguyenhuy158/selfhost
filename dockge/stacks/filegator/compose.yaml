@@ -1,0 +1,7 @@
+services:
+  filegator:
+    ports:
+      - 8181:8080
+    image: filegator/filegator
+    command: "visit: http://127.0.0.1:8080 login as admin/admin123"
+networks: {}

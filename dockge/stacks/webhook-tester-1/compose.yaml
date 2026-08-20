@@ -1,0 +1,17 @@
+services:
+  webhook-tester:
+    tty: true
+    ports:
+      - 8007:8080/tcp
+    image: ghcr.io/tarampampam/webhook-tester:2
+    labels:
+      - dockflare.enable=true
+      - dockflare.hostname=whtest.huyab.click
+      - dockflare.service=http://webhook-tester:8080
+      - dockflare.access.group=admin-team
+networks:
+  dockflare-internal:
+    external: true
+  cloudflare-net:
+    name: cloudflare-net
+    external: true

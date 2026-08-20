@@ -1,0 +1,27 @@
+name: copyparty
+
+services:
+  copyparty:
+    image: copyparty/ac:latest
+    container_name: copyparty
+    restart: always
+    networks:
+      - cloudflare-net
+    volumes:
+      - ./copyparty/config.conf:/cfg/config.conf:ro
+      - ./copyparty:/cfg/hists:rw
+      - /mnt/DATA1T:/media:rw
+    # expose:
+    #   - "3923"
+    user: "1000:1000"
+    # logging:
+    #   driver: journald
+    labels:
+      dockflare.enable: "true"
+      dockflare.hostname: "copyparty.huyab.click"
+      dockflare.service: "http://copyparty:3923"
+      dockflare.access.group: "admin-team"
+
+networks:
+  cloudflare-net:
+    external: true

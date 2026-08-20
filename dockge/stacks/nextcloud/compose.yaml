@@ -1,0 +1,45 @@
+services:
+  db:
+    image: mariadb:10.11
+    container_name: nextcloud-db
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PW}
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PW}
+  redis:
+    image: redis:alpine
+    container_name: nextcloud-redis
+    restart: unless-stopped
+  app:
+    image: nextcloud:latest
+    container_name: nextcloud
+    restart: unless-stopped
+    ports:
+      - 8088:80
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - nextcloud_data:/var/www/html
+    environment:
+      MYSQL_HOST: db
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PW}
+      REDIS_HOST: redis
+      NEXTCLOUD_TRUSTED_DOMAINS: ${TRUSTED_DOMAINS}
+      OVERWRITECLIURL: ${OVERWRITE_URL}
+      OVERWRITEPROTOCOL: https
+    labels:
+      - dockflare.enable=true
+      - dockflare.hostname=drive.huyab.click
+      - dockflare.service=http://app:80
+      - dockflare.access.group=admin-team
+volumes:
+  db_data: null
+  nextcloud_data: null
+networks: {}

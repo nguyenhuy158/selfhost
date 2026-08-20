@@ -52,7 +52,7 @@ then
         fi
         sleep 2
     done
-    cmd="docker exec -i -e PGPASSWORD=n8n_password ${PROJECT_DB} psql -U n8n_user -d n8n -A < $DUMP"
+    cmd="docker exec -i -e PGPASSWORD=***REMOVED*** ${PROJECT_DB} psql -U n8n_user -d n8n -A < $DUMP"
     echo $cmd
     eval " $cmd"
 

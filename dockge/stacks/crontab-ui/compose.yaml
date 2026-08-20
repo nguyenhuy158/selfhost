@@ -1,0 +1,20 @@
+services:
+  crontab-ui:
+    environment:
+      - BASIC_AUTH_USER=huy
+      - BASIC_AUTH_PWD=huy
+      - HOST=host.docker.internal
+    ports:
+      - 8000:8000
+    image: alseambusher/crontab-ui
+    networks:
+      - cloudflare-net
+    labels:
+      - dockflare.enable=true
+      - dockflare.hostname=crontab.huyab.click
+      - dockflare.service=http://crontab:8000
+      - dockflare.access.group=admin-team
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true

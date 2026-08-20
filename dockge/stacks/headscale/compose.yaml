@@ -1,0 +1,28 @@
+services:
+  headscale:
+    image: docker.io/headscale/headscale:stable
+    restart: unless-stopped
+    container_name: headscale
+    # ports:
+    #   - 8080:8080
+    #   - 9090:9090
+    volumes:
+      # Please set <HEADSCALE_PATH> to the absolute path
+      # of the previously created headscale directory.
+      - ./headscale/config:/etc/headscale
+      - ./headscale/lib:/var/lib/headscale
+      - ./headscale/run:/var/run/headscale
+    command: serve
+    networks:
+      - cloudflare-net
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=headscale.huyab.click"
+      - "dockflare.service=http://headscale:8080"
+      - "dockflare.access.group=admin-team"
+
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true
+

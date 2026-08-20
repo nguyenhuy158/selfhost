@@ -1,0 +1,44 @@
+[submodule "dockge/stacks/temporalio/docker-compose"]
+	path = dockge/stacks/temporalio/docker-compose
+	url = https://github.com/temporalio/docker-compose.git
+[submodule "dockge/stacks/firecrawl/repo"]
+	path = dockge/stacks/firecrawl/repo
+	url = https://github.com/mendableai/firecrawl.git
+[submodule "dockge/stacks/gemini-usage-tracker"]
+	path = dockge/stacks/gemini-usage-tracker
+	url = git@github.com:nguyenhuy158/gemini-usage-tracker.git
+[submodule "dockge/stacks/open-webhook"]
+	path = dockge/stacks/open-webhook
+	url = git@github.com:nguyenhuy158/open-webhook.git
+[submodule "dockge/stacks/superset"]
+	path = dockge/stacks/superset
+	url = https://github.com/apache/superset.git
+[submodule "dockge/stacks/webhook-tester"]
+	path = dockge/stacks/webhook-tester
+	url = git@github.com:nguyenhuy158/webhook-tester.git
+[submodule "dockge/stacks/server-control"]
+	path = dockge/stacks/server-control
+	url = git@github.com:nguyenhuy158/server-control.git
+	branch = go
+[submodule "dockge/stacks/chi-tieu"]
+	path = dockge/stacks/chi-tieu
+	url = git@github.com:nguyenhuy158/finance-management.git
+[submodule "dockge/stacks/huy-cheatsheet"]
+	path = dockge/stacks/huy-cheatsheet
+	url = git@github.com:nguyenhuy158/cheatsheet.git
+[submodule "dockge/stacks/service-hub"]
+	path = dockge/stacks/service-hub
+	url = git@github.com:nguyenhuy158/service-portal.git
+[submodule "dockge/stacks/mock-server"]
+	path = dockge/stacks/mock-server
+	url = git@github.com:nguyenhuy158/mock-server.git
+	branch = master
+[submodule "dockge/stacks/auto-rename"]
+	path = dockge/stacks/auto-rename
+	url = git@github.com:nguyenhuy158/auto-rename
+[submodule "dockge/stacks/stress-wifi"]
+	path = dockge/stacks/stress-wifi
+	url = git@github.com:nguyenhuy158/stress-wifi
+[submodule "dockge/stacks/syncthing"]
+	path = dockge/stacks/syncthing
+	url = git@github.com:nguyenhuy158/syncthing.git

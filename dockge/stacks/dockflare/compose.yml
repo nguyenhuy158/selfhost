@@ -2,9 +2,14 @@ services:
   docker-socket-proxy:
     image: tecnativa/docker-socket-proxy:v0.4.1
     logging:
-      driver: "none"
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     container_name: docker-socket-proxy
     restart: unless-stopped
+    cpus: 0.25
+    mem_limit: 64m
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - CONTAINERS=1
@@ -38,6 +43,8 @@ services:
     image: alplat/dockflare:stable
     container_name: dockflare
     restart: unless-stopped
+    cpus: 0.5
+    mem_limit: 256m
     volumes:
       - dockflare_data:/app/data
     environment:
@@ -62,7 +69,10 @@ services:
       - "dockflare.service=http://dockflare:5000"
       - "dockflare.access.group=admin-team"
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:5000/ping" ]
+      # Image không có curl — healthcheck cũ dùng curl nên exec luôn fail
+      # ("executable file not found in $PATH"), container báo unhealthy vĩnh
+      # viễn dù app vẫn phục vụ bình thường. Python có sẵn trong image.
+      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/ping').read()" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -71,23 +81,13 @@ services:
     image: redis:7-alpine
     container_name: dockflare-redis
     restart: unless-stopped
+    cpus: 0.5
+    mem_limit: 128m
     command: [ "redis-server", "--save", "", "--appendonly", "no" ]
     volumes:
       - dockflare_redis:/data
     networks:
       - dockflare-internal
-
-  picoshare:
-    image: mtlynch/picoshare
-    environment:
-      - PS_SHARED_SECRET=huy
-    labels:
-      - "dockflare.enable=true"
-      - "dockflare.hostname=files.huyab.click"
-      - "dockflare.service=http://picoshare:4001"
-      - "dockflare.access.group=nas-family"
-    networks:
-      - cloudflare-net
 
   internal-tool:
     image: nginx:latest

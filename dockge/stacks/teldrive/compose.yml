@@ -23,9 +23,10 @@ services:
     image: groonga/pgroonga:latest-alpine-17
     container_name: postgres_db
     restart: always
+    env_file:
+      - .env
     environment:
       - POSTGRES_USER=teldrive
-      - POSTGRES_PASSWORD=secret
       - POSTGRES_DB=postgres
     volumes:
       - ./postgres_data:/var/lib/postgresql/data

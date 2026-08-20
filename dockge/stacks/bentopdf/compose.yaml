@@ -1,0 +1,9 @@
+services:
+  bentopdf:
+    image: ghcr.io/alam00000/bentopdf:latest # Recommended
+    # image: bentopdfteam/bentopdf:latest     # Alternative: Docker Hub
+    container_name: bentopdf
+    ports:
+      - 3032:8080
+    restart: unless-stopped
+networks: {}

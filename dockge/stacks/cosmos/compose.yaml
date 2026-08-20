@@ -1,0 +1,16 @@
+services:
+  cosmos-server:
+    ports:
+      - 80:80
+      - 443:443
+      - 4242:4242/udp
+    container_name: cosmos-server
+    hostname: cosmos-server
+    restart: always
+    privileged: true # Required for SELinux
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /mnt/DATA1T/dockge/stacks/cosmos/config:/config
+      - /:/mnt/host
+    image: azukaar/cosmos-server:latest
+networks: {}

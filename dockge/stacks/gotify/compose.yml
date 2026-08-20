@@ -1,0 +1,24 @@
+services:
+  gotify:
+    image: gotify/server
+    # ports:
+    #   - 8282:80
+    environment:
+      GOTIFY_DEFAULTUSER_PASS: 'admin'
+    volumes:
+      - './gotify_data:/app/data'
+    # to run gotify as a dedicated user:
+    # sudo chown -R 1234:1234 ./gotify_data
+    # user: "1234:1234"
+    networks:
+      - cloudflare-net
+    labels:
+      - "dockflare.enable=true"
+      - "dockflare.hostname=gotify.huyab.click"
+      - "dockflare.service=http://gotify:80"
+      - "dockflare.access.group=admin-team"
+
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true

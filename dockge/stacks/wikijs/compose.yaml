@@ -1,0 +1,15 @@
+services:
+  wikijs:
+    image: lscr.io/linuxserver/wikijs:latest
+    container_name: wikijs
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - /mnt/DATA1T/dockge/stacks/wikijs/config:/config
+      - /mnt/DATA1T/dockge/stacks/wikijs/data:/data
+    ports:
+      - 3333:3000
+    restart: unless-stopped
+networks: {}

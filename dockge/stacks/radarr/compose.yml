@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000        # user id, sửa lại cho đúng máy bạn
+      - PGID=1000        # group id
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ./config:/config         # lưu cấu hình
+      - ./movies:/movies         # thư mục phim
+      - ./downloads:/downloads   # thư mục download
+    ports:
+      - 7878:7878
+    restart: unless-stopped

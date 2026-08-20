@@ -38,8 +38,13 @@ services:
       - redis
       - database
     restart: always
+    # Giới hạn tài nguyên: tránh giành CPU/RAM với desktop
+    cpus: 2.0
+    mem_limit: 1500m
     healthcheck:
       disable: false
+    logging:
+      driver: json-file
   immich-machine-learning:
     networks:
       - internal
@@ -56,8 +61,15 @@ services:
     env_file:
       - .env
     restart: always
+    # Job ML (face detect / CLIP) ăn 2 nhân liên tục -> ép về 1.5 nhân
+    # và hạ ưu tiên CPU để nhường desktop khi máy bận
+    cpus: 1.0
+    cpu_shares: 512
+    mem_limit: 1g
     healthcheck:
       disable: false
+    logging:
+      driver: json-file
   redis:
     networks:
       - internal
@@ -66,6 +78,8 @@ services:
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
+    cpus: 0.5
+    mem_limit: 256m
   database:
     networks:
       - internal
@@ -82,6 +96,10 @@ services:
       # Do not edit the next line. If you want to change the database storage location on your system, edit the value of DB_DATA_LOCATION in the .env file
       - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
     restart: always
+    cpus: 2.0
+    mem_limit: 1g
+    logging:
+      driver: json-file
   power-tools:
     networks:
       - internal
@@ -91,6 +109,8 @@ services:
       - 8001:3000
     env_file:
       - .env
+    environment:
+      HOSTNAME: "0.0.0.0"
     healthcheck:
       test:
         - CMD
@@ -98,12 +118,14 @@ services:
         - --no-verbose
         - --tries=1
         - --spider
-        - http://localhost:3000/api/health
+        - http://127.0.0.1:3000/api/health
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
     restart: always
+    cpus: 0.5
+    mem_limit: 256m
 networks:
   internal:
     driver: bridge

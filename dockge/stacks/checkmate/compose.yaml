@@ -1,0 +1,55 @@
+services:
+  server:
+    image: ghcr.io/bluewave-labs/checkmate-backend-mono:latest
+    pull_policy: always
+    restart: always
+    ports:
+      - 52345:52345
+    environment:
+      - UPTIME_APP_API_BASE_URL=http://100.82.111.89:52345/api/v1
+      - UPTIME_APP_CLIENT_HOST=http://100.82.111.89
+      - CLIENT_HOST=http://100.82.111.89
+      - UPTIME_APP_API_BASE_URL=http://localhost:52345/api/v1
+      - UPTIME_APP_CLIENT_HOST=http://localhost
+      - DB_CONNECTION_STRING=mongodb://mongodb:27017/uptime_db
+      - CLIENT_HOST=http://localhost
+      - JWT_SECRET=my_secret
+      - UPTIME_APP_API_BASE_URL=http://100.82.111.89:52345/api/v1
+      - UPTIME_APP_CLIENT_HOST=http://100.82.111.89
+      - CLIENT_HOST=http://100.82.111.89
+    depends_on:
+      - mongodb
+    networks:
+      - cloudflare-net
+    labels:
+      - dockflare.enable=true
+      - dockflare.hostname=server.huyab.click
+      - dockflare.service=http://server:52345
+      - dockflare.access.group=admin-team
+  mongodb:
+    image: ghcr.io/bluewave-labs/checkmate-mongo:latest
+    restart: always
+    command:
+      - mongod
+      - --quiet
+      - --bind_ip_all
+    volumes:
+      - ./mongo/data:/data/db
+    healthcheck:
+      test:
+        - CMD
+        - mongosh
+        - --eval
+        - db.adminCommand('ping')
+        - --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      start_interval: 1s
+      retries: 30
+    networks:
+      - cloudflare-net
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true

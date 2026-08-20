@@ -1,0 +1,10 @@
+services:
+  cloudflared-huyab:
+    container_name: cloudflared-huyab
+    image: cloudflare/cloudflared:latest
+    restart: always
+    network_mode: host
+    user: root
+    volumes:
+      - ./config:/etc/cloudflared
+    command: tunnel run

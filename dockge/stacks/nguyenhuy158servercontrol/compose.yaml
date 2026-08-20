@@ -1,0 +1,15 @@
+services:
+  serverui:
+    image: nguyenhuy158/server-control:go
+    pull_policy: always
+    ports:
+      - 5005:9876
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
+    restart: always
+    privileged: true
+networks: {}

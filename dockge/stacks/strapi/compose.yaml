@@ -1,0 +1,34 @@
+services:
+  strapi:
+    image: strapi/strapi:latest
+    #restart: unless-stopped
+    environment:
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: strapi
+      DATABASE_USERNAME: ${STRAPI_DB_USER}
+      DATABASE_PASSWORD: ${STRAPI_DB_PASSWORD}
+      JWT_SECRET: ${STRAPI_JWT_SECRET}
+      APP_KEYS: ${STRAPI_APP_KEYS}
+      API_TOKEN_SALT: ${STRAPI_API_TOKEN_SALT}
+      ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET}
+    volumes:
+      - ./strapi/public/uploads:/opt/app/public/uploads
+    ports:
+      - 1337:1337
+    depends_on:
+      - db
+  db:
+    #image: postgres:15-alpine
+    image: postgres:15
+    #restart: unless-stopped
+    environment:
+      POSTGRES_DB: strapi
+      POSTGRES_USER: ${STRAPI_DB_USER}
+      POSTGRES_PASSWORD: ${STRAPI_DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data: null
+networks: {}
