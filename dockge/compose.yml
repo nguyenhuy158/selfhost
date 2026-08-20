@@ -19,10 +19,10 @@ services:
       # ⚠️ READ IT CAREFULLY. If you did it wrong, your data could end up writing into a WRONG PATH.
       # ⚠️ 1. FULL path only. No relative path (MUST)
       # ⚠️ 2. Left Stacks Path === Right Stacks Path (MUST)
-      - ${DOCKGE_STACKS_DIR:-/mnt/DATA1T/selfhost/dockge/stacks}:${DOCKGE_STACKS_DIR:-/mnt/DATA1T/selfhost/dockge/stacks}
+      - ${DOCKGE_STACKS_DIR}:/app/stacks
     environment:
       # Tell Dockge where is your stacks directory
-      - DOCKGE_STACKS_DIR=/mnt/DATA1T/selfhost/dockge/stacks
+      - DOCKGE_STACKS_DIR=/app/stacks
       - DOCKGE_ENABLE_CONSOLE=true
     # user: "1000:1000"
     networks:
